@@ -1,10 +1,12 @@
     function onLoad() {
         if ((/(ipad|iphone|ipod|android|windows phone)/i.test(navigator.userAgent))) {
-            document.addEventListener('deviceready', initApp, false);
+            document.addEventListener('deviceready', checkFirstUse, false);
         } else {
-            initApp();
+          // AndroidFullScreen.immersiveMode(null, null);
+           checkFirstUse();
         }
     }
+
     var admobid = {};
     if (/(android)/i.test(navigator.userAgent)) {
         admobid = { // for Android
@@ -20,6 +22,7 @@
         // display the banner at startup
         createSelectedBanner();
     }
+
     function initAd() {
         var defaultOptions = {
             // bannerId: admobid.banner,
@@ -106,3 +109,17 @@
     //    var autoshow = document.getElementById('autoshow').checked;
     //    AdMob.prepareInterstitial({ adId: admobid.interstitial, autoShow: autoshow });
     //}
+
+       function checkFirstUse()
+    {
+        var p = localStorage.getItem("lothianfirstuse");
+        if (p == 0) 
+        {
+            navigator.notification.alert('For maximum screen space, we hide the phone menu. To exit app, please swipe up from the bottom or down from the top.', initApp, 'Thank you for downloading', 'OK');
+            localStorage.setItem("lothianfirstuse", 1);
+        }
+        else
+        {            
+        initApp(); 
+        }
+    }
