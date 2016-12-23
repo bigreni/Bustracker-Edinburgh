@@ -10,7 +10,8 @@
     var admobid = {};
     if (/(android)/i.test(navigator.userAgent)) {
         admobid = { // for Android
-            banner: 'ca-app-pub-1683858134373419/7033447889'
+            banner: 'ca-app-pub-1683858134373419/7601963485',
+            interstitial: 'ca-app-pub-1683858134373419/4549361485'
             //banner: 'ca-app-pub-3886850395157773/3411786244'
             //interstitial: 'ca-app-pub-9249695405712287/3301233156'
         };
@@ -20,7 +21,8 @@
         if (!AdMob) { alert('admob plugin not ready'); return; }
         initAd();
         // display the banner at startup
-        createSelectedBanner();
+        //createSelectedBanner();
+        loadInterstitial();
     }
 
     function initAd() {
@@ -59,11 +61,7 @@
 
         // new events, with variable to differentiate: adNetwork, adType, adEvent
         document.addEventListener('onAdFailLoad', function (data) {
-            alert('error: ' + data.error +
-                    ', reason: ' + data.reason +
-                    ', adNetwork:' + data.adNetwork +
-                    ', adType:' + data.adType +
-                    ', adEvent:' + data.adEvent); // adType: 'banner' or 'interstitial'
+
         });
         document.addEventListener('onAdLoaded', function (data) { });
         document.addEventListener('onAdPresent', function (data) { });
@@ -110,16 +108,53 @@
     //    AdMob.prepareInterstitial({ adId: admobid.interstitial, autoShow: autoshow });
     //}
 
-       function checkFirstUse()
+
+    function successFunction()
     {
-        var p = localStorage.getItem("lothianfirstuse");
-        if (p == 0) 
+    }
+ 
+    function errorFunction(error)
+    {
+    }
+
+    function loadInterstitial() {
+        AdMob.prepareInterstitial({ adId: admobid.interstitial, isTesting: false, autoShow: true });
+    }
+
+   function checkFirstUse()
+    {
+        var currentVersion = 3;
+        var p = window.localStorage.getItem("currentVersion");
+        if (p == null) //App downloaded first time
         {
-            navigator.notification.alert('For maximum screen space, we hide the phone menu. To exit app, please swipe up from the bottom or down from the top.', initApp, 'Thank you for downloading', 'OK');
-            localStorage.setItem("lothianfirstuse", 1);
+//Finnish
+            navigator.notification.alert('To see the phone menu, please swipe up/down from the bottom/top of the screen.', initApp, 'Thank you for downloading', 'OK');
+            window.localStorage.setItem("currentVersion", currentVersion);
+        }
+        else if(p < currentVersion) //if app upgraded
+        {
+//Finnish
+            navigator.notification.alert('To see the phone menu, please swipe up/down from the bottom/top of the screen.', initApp, 'Thank you for updating', 'OK');
+            window.localStorage.setItem("currentVersion", currentVersion);            
         }
         else
-        {            
-        initApp(); 
+        {
+            askRating();
+            initApp();
         }
     }
+
+function askRating()
+{
+  AppRate.preferences = {
+  openStoreInApp: true,
+  useLanguage:  'en',
+  usesUntilPrompt: 10,
+  promptAgainForEachNewVersion: true,
+  storeAppURL: {
+                android: 'market://details?id=com.edinburgh.withads'
+               }
+};
+ 
+AppRate.promptForRating(false);
+}
