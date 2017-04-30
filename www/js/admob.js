@@ -15,7 +15,12 @@
             //banner: 'ca-app-pub-3886850395157773/3411786244'
             //interstitial: 'ca-app-pub-9249695405712287/3301233156'
         };
-    }
+    } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
+    admobid = {
+      banner: 'ca-app-pub-1683858134373419/7601963485', // or DFP format "/6253334/dfp_example_ad"
+      interstitial: 'ca-app-pub-9249695405712287/2795951551'
+    };
+  }
 
     function initApp() {
         if (!AdMob) { alert('admob plugin not ready'); return; }
@@ -45,21 +50,6 @@
     }
     // optional, in case respond to events or handle error
     function registerAdEvents() {
-        /* deprecated
-        document.addEventListener('onBannerFailedToReceive', function(data){ alert('error: ' + data.error + ', reason: ' + data.reason); });
-        document.addEventListener('onBannerReceive', function(){});
-        document.addEventListener('onBannerPresent', function(){});
-        document.addEventListener('onBannerLeaveApp', function(){});
-        document.addEventListener('onBannerDismiss', function(){});
-
-        document.addEventListener('onInterstitialFailedToReceive', function(data){ alert('error: ' + data.error + ', reason: ' + data.reason); });
-        document.addEventListener('onInterstitialReceive', function(){});
-        document.addEventListener('onInterstitialPresent', function(){});
-        document.addEventListener('onInterstitialLeaveApp', function(){});
-        document.addEventListener('onInterstitialDismiss', function(){});
-        */
-
-        // new events, with variable to differentiate: adNetwork, adType, adEvent
         document.addEventListener('onAdFailLoad', function (data) {
 
         });
@@ -69,45 +59,9 @@
         document.addEventListener('onAdDismiss', function (data) { });
     }
 
-    // click button to call following functions
-    //function getSelectedAdSize() {
-    //    var i = document.getElementById("adSize").selectedIndex;
-    //    var items = document.getElementById("adSize").options;
-    //    return items[i].value;
-    //}
-    //function getSelectedPosition() {
-    //    var i = document.getElementById("adPosition").selectedIndex;
-    //    var items = document.getElementById("adPosition").options;
-    //    return parseInt(items[i].value);
-    //}
     function createSelectedBanner() {
-        //var overlap = document.getElementById('overlap').checked;
-        //var offsetTopBar = document.getElementById('offsetTopBar').checked;
-        //AdMob.createBanner( {adId:admobid.banner, overlap:overlap, offsetTopBar:offsetTopBar, adSize: getSelectedAdSize(), position:getSelectedPosition()} );
         AdMob.createBanner({adId:admobid.banner});
     }
-    //function createBannerOfGivenSize() {
-    //    var w = document.getElementById('w').value;
-    //    var h = document.getElementById('h').value;
-
-    //    AdMob.createBanner({ adId: admobid.banner,
-    //        adSize: 'CUSTOM', width: w, height: h,
-    //        position: getSelectedPosition()
-    //    });
-    //}
-    //function showBannerAtSelectedPosition() {
-    //    AdMob.showBanner(getSelectedPosition());
-    //}
-    //function showBannerAtGivenXY() {
-    //    var x = document.getElementById('x').value;
-    //    var y = document.getElementById('y').value;
-    //    AdMob.showBannerAtXY(x, y);
-    //}
-    //function prepareInterstitial() {
-    //    var autoshow = document.getElementById('autoshow').checked;
-    //    AdMob.prepareInterstitial({ adId: admobid.interstitial, autoShow: autoshow });
-    //}
-
 
     function successFunction()
     {
@@ -123,25 +77,8 @@
 
    function checkFirstUse()
     {
-        var currentVersion = 3;
-        var p = window.localStorage.getItem("currentVersion");
-        if (p == null) //App downloaded first time
-        {
-//Finnish
-            navigator.notification.alert('To see the phone menu, please swipe up/down from the bottom/top of the screen.', initApp, 'Thank you for downloading', 'OK');
-            window.localStorage.setItem("currentVersion", currentVersion);
-        }
-        else if(p < currentVersion) //if app upgraded
-        {
-//Finnish
-            navigator.notification.alert('To see the phone menu, please swipe up/down from the bottom/top of the screen.', initApp, 'Thank you for updating', 'OK');
-            window.localStorage.setItem("currentVersion", currentVersion);            
-        }
-        else
-        {
             askRating();
             initApp();
-        }
     }
 
 function askRating()
@@ -152,6 +89,7 @@ function askRating()
   usesUntilPrompt: 10,
   promptAgainForEachNewVersion: true,
   storeAppURL: {
+                ios: '1231853215',
                 android: 'market://details?id=com.edinburgh.withads'
                }
 };
