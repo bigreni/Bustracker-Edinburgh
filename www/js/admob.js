@@ -77,8 +77,12 @@
 
    function checkFirstUse()
     {
-            askRating();
-            initApp();
+     if(document.getElementById('frmMap').src == '')
+        {
+            document.getElementById('frmMap').src = 'Map.html';
+        }
+            //askRating();
+            //initApp();
     }
 
 function askRating()
