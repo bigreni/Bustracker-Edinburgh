@@ -2,37 +2,55 @@ var map = null;
 var lc = null;
 var timer = null;
 var markers_layer = null;
-
-$(function() {
-
-	map = L.map("map").setView([55.959026, -3.184332], 16);
-
-	L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=5c3c9629821141149b9c1b2f23eaa6f0', {
-    	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors. Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>'
-	}).addTo(map);
-	
-	/*var tile_layer = new L.StamenTileLayer("terrain");
-	map.addLayer(tile_layer);*/
-	
-	lc = L.control.locate({
-    	locateOptions: {maxZoom: 16}
+var latitude = 55.959026;
+var longitude = -3.184332;
+$(function () {
+    //map = L.map("map").setView([41.9332603, -87.6418133], 16);
+    map = L.map("map").setView([latitude, longitude], 16);
+    //setCurrentLocation();
+    L.tileLayer('https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=5c3c9629821141149b9c1b2f23eaa6f0', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors.'
     }).addTo(map);
-	lc.start();
-	map.on('dragstart', lc._stopFollowing, lc);
-	
-	request_vehicles();
-	
-	setInterval(function(){ 
-		map.removeLayer(markers_layer);
-		markers_layer = new L.FeatureGroup();
-		map.addLayer(markers_layer);
-		markers = [];
-		request_vehicles();
-	}, 600000);
+
+    /*var tile_layer = new L.StamenTileLayer("terrain");
+    map.addLayer(tile_layer);*/
+    if (/(android)/i.test(navigator.userAgent)) {
+        lc = L.control.locate({
+            locateOptions: { maxZoom: 16 }
+        }).addTo(map);
+        lc.start();
+        map.on('dragstart', lc._stopFollowing, lc);
+    }
+
+    request_vehicles();
+
+    setInterval(function () {
+        map.removeLayer(markers_layer);
+        markers_layer = new L.FeatureGroup();
+        map.addLayer(markers_layer);
+        markers = [];
+        request_vehicles();
+    }, 600000);
 });
 
 var markers = [];
 setInterval(request_vehicles, 10000);
+
+function setCurrentLocation()
+{
+    navigator.geolocation.getCurrentPosition(success, fail);
+}
+
+function success(position) {
+    alert(position.coords.latitude + ':' + position.coords.longitude);
+
+    map = L.map("map").setView([position.coords.latitude, position.coords.longitude], 16);
+    alert(map);
+}
+
+function fail(error) { 
+    map = L.map("map").setView([55.959026, -3.184332], 16);
+}
 
 function request_vehicles()
 {
