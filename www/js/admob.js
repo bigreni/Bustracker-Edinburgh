@@ -77,6 +77,14 @@
 
    function checkFirstUse()
     {
+        if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) 
+         { // for ios
+           document.getElementById('frmMap').src = 'Map.html';         
+         }
+         else
+         {
+             document.getElementById('frmMap').src = 'http://tfeapp.com/live/';
+         }
             initApp();
             askRating();
     }
