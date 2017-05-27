@@ -77,8 +77,8 @@
 
    function checkFirstUse()
     {
-            askRating();
             initApp();
+            askRating();
     }
 
 function askRating()
