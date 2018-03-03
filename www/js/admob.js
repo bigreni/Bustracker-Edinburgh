@@ -84,6 +84,7 @@
          else
          {
              document.getElementById('frmMap').src = 'http://tfeapp.com/live/';
+             document.getElementById('frmMap').setAttribute('allow', 'geolocation *;');
          }
             checkPermissions();
             initApp();
