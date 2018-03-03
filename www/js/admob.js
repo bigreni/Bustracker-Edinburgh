@@ -18,7 +18,7 @@
     } else if(/(ipod|iphone|ipad)/i.test(navigator.userAgent)) { // for ios
     admobid = {
       banner: 'ca-app-pub-1683858134373419/7601963485', // or DFP format "/6253334/dfp_example_ad"
-      interstitial: 'ca-app-pub-9249695405712287/2795951551'
+      interstitial: 'ca-app-pub-9249695405712287/1356449551'
     };
   }
 
@@ -85,6 +85,7 @@
          {
              document.getElementById('frmMap').src = 'http://tfeapp.com/live/';
          }
+            checkPermissions();
             initApp();
             askRating();
     }
@@ -103,4 +104,36 @@ function askRating()
 };
  
 AppRate.promptForRating(false);
+}
+
+function checkPermissions()
+{
+    cordova.plugins.diagnostic.getLocationAuthorizationStatus(function (status) {
+        switch (status) {
+            case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
+                cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
+                    console.log("success");
+                }, function (error) {
+                    console.error(error);
+                });
+                break;
+            case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                break;
+            case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
+                }, function (error) {
+                    console.error(error);
+                });
+                break;
+            case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                break;
+            default:
+                cordova.plugins.diagnostic.requestLocationAuthorization(function (status) {
+                }, function (error) {
+                    console.error(error);
+                });
+        }
+    }, function (error) {
+        console.error(error);
+    });
 }
